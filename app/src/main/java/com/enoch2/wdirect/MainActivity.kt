@@ -21,11 +21,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.enoch2.wdirect.ui.theme.Green100
 import com.enoch2.wdirect.ui.theme.WDirectTheme
 
 class MainActivity : ComponentActivity() {
@@ -50,12 +50,28 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MyTopAppBAr(){
+    val showAlertDialog = remember { mutableStateOf(false) }
+
     TopAppBar(title = { Text(stringResource(R.string.app_name)) },
         actions = {
-            IconButton(onClick = { /*TODO*/ }) {
+            IconButton(onClick = {
+                showAlertDialog.value = true
+            }) {
                 Icon(Icons.Filled.Info, "About", tint = Color.White)
             }
         })
+
+    if (showAlertDialog.value){
+        AlertDialog(onDismissRequest = { showAlertDialog.value = false },
+            title = { Text("About") },
+            text = { Text("Open chats on whatsapp without saving them") },
+            confirmButton = {
+                Button(onClick = { showAlertDialog.value = false }) {
+                    Text("Okay")
+                }
+            }
+        )
+    }
 }
 
 @Composable
@@ -88,7 +104,7 @@ fun WDirectScreen(){
                     leadingIcon = {
                         Icon(
                             Icons.Filled.Phone, null,
-                            tint = colorResource(R.color.purple_500)
+                            tint = Green100
                         )
                     },
                     singleLine = true,
@@ -108,11 +124,7 @@ fun WDirectScreen(){
                         .height(150.dp),
                     singleLine = false,
                     label = { Text("Enter Message") },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-                    keyboardActions = KeyboardActions(onDone = {
-                        Toast.makeText(context, "Done", Toast.LENGTH_SHORT).show()
-                        }
-                    )
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
                 )
             }
             Row(modifier = Modifier
@@ -121,8 +133,14 @@ fun WDirectScreen(){
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center) {
                 Button(onClick = {
-                    link.value = link.value + phoneNumber.value
-                    context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(link.value)))
+                    if (phoneNumber.value == ""){
+                        Toast.makeText(context, "Enter a number to continue",
+                            Toast.LENGTH_SHORT).show()
+                    } else {
+                        link.value = link.value + phoneNumber.value
+                        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(link.value)))
+                        link.value = "https://wa.me/"
+                    }
                 },
                     modifier = Modifier
                         .weight(1f)
@@ -131,9 +149,16 @@ fun WDirectScreen(){
                 }
 
                 Button(onClick = {
-                    linkWithMsg.value = linkWithMsg.value + phoneNumber.value + "?text=" +
-                            createLinkWithMsg(message.value)
-                    context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(linkWithMsg.value)))
+                    if (phoneNumber.value == "" || message.value == ""){
+                        Toast.makeText(context, "Enter a number and message to continue",
+                            Toast.LENGTH_SHORT).show()
+                    } else {
+                        linkWithMsg.value = link.value + phoneNumber.value + "?text=" +
+                                createLinkWithMsg(message.value)
+                        context.startActivity(Intent(Intent.ACTION_VIEW,
+                            Uri.parse(linkWithMsg.value)))
+                        link.value = "https://wa.me/"
+                    }
                 },
                     modifier = Modifier.weight(1f)) {
                     Text("Send Message")
