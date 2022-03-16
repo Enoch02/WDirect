@@ -140,6 +140,7 @@ fun WDirectScreen(){
                         link.value = link.value + phoneNumber.value
                         context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(link.value)))
                         link.value = "https://wa.me/"
+                        phoneNumber.value = ""
                     }
                 },
                     modifier = Modifier
@@ -158,6 +159,7 @@ fun WDirectScreen(){
                         context.startActivity(Intent(Intent.ACTION_VIEW,
                             Uri.parse(linkWithMsg.value)))
                         link.value = "https://wa.me/"
+                        message.value = ""
                     }
                 },
                     modifier = Modifier.weight(1f)) {
