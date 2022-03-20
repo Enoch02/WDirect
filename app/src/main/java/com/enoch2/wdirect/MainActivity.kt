@@ -64,7 +64,7 @@ fun MyTopAppBAr(){
     if (showAlertDialog.value){
         AlertDialog(onDismissRequest = { showAlertDialog.value = false },
             title = { Text("About") },
-            text = { Text("Open chats on whatsapp without saving them") },
+            text = { Text("Open chats on whatsapp without saving contacts") },
             confirmButton = {
                 Button(onClick = { showAlertDialog.value = false }) {
                     Text("Okay")
