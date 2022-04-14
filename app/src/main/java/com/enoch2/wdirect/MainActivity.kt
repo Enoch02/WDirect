@@ -25,6 +25,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.enoch2.wdirect.redirect.redirectWithMsg
+import com.enoch2.wdirect.redirect.redirectWithoutMsg
 import com.enoch2.wdirect.ui.theme.Green100
 import com.enoch2.wdirect.ui.theme.WDirectTheme
 
@@ -133,16 +135,7 @@ fun WDirectScreen(){
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center) {
                 Button(onClick = {
-                    if (phoneNumber.value == ""){
-                        Toast.makeText(context, "Enter a number to continue",
-                            Toast.LENGTH_SHORT).show()
-                    } else {
-                        link.value = link.value + phoneNumber.value
-                        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(link.value)))
-                        link.value = "https://wa.me/"
-                        phoneNumber.value = ""
-                        message.value = ""
-                    }
+                    redirectWithoutMsg(phoneNumber, message, link, context)
                 },
                     modifier = Modifier
                         .weight(1f)
@@ -151,17 +144,7 @@ fun WDirectScreen(){
                 }
 
                 Button(onClick = {
-                    if (phoneNumber.value == "" || message.value == ""){
-                        Toast.makeText(context, "Enter a number and message to continue",
-                            Toast.LENGTH_SHORT).show()
-                    } else {
-                        linkWithMsg.value = link.value + phoneNumber.value + "?text=" +
-                                createLinkWithMsg(message.value)
-                        context.startActivity(Intent(Intent.ACTION_VIEW,
-                            Uri.parse(linkWithMsg.value)))
-                        link.value = "https://wa.me/"
-                        message.value = ""
-                    }
+                    redirectWithMsg(phoneNumber, message, link, linkWithMsg, context)
                 },
                     modifier = Modifier.weight(1f)) {
                     Text("Send Message")
@@ -169,8 +152,4 @@ fun WDirectScreen(){
             }
         }
     }
-}
-
-fun createLinkWithMsg(message: String): String {
-    return message.replace(" ", "%20")
 }
