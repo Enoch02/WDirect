@@ -1,7 +1,5 @@
 package com.enoch2.wdirect
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -78,6 +76,7 @@ fun MyTopAppBAr(){
 
 @Composable
 fun WDirectScreen(){
+    val pattern = Regex("(?:[0-9]●?){6,14}[0-9]\$")
     val phoneNumber = remember { mutableStateOf("") }
     val message = remember { mutableStateOf("") }
     val context = LocalContext.current
@@ -135,7 +134,11 @@ fun WDirectScreen(){
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center) {
                 Button(onClick = {
-                    redirectWithoutMsg(phoneNumber, message, link, context)
+                    if (pattern.matches(phoneNumber.value))
+                        redirectWithoutMsg(phoneNumber, message, link, context)
+                    else
+                        Toast.makeText(context, "Invalid input", Toast.LENGTH_SHORT).show()
+
                 },
                     modifier = Modifier
                         .weight(1f)
@@ -144,7 +147,15 @@ fun WDirectScreen(){
                 }
 
                 Button(onClick = {
-                    redirectWithMsg(phoneNumber, message, link, linkWithMsg, context)
+                    if (pattern.matches(phoneNumber.value)) {
+                        if (message.value != "")
+                            redirectWithMsg(phoneNumber, message, link, linkWithMsg, context)
+                        else
+                            Toast.makeText(context, "Type a message", Toast.LENGTH_SHORT).show()
+                    }
+                    else
+                        Toast.makeText(context, "Invalid input", Toast.LENGTH_SHORT).show()
+
                 },
                     modifier = Modifier.weight(1f)) {
                     Text("Send Message")
