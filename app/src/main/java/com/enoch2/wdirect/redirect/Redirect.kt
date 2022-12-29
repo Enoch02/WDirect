@@ -5,10 +5,12 @@ import android.content.Intent
 import android.net.Uri
 import androidx.compose.runtime.MutableState
 
-fun redirectWithoutMsg(phoneNumber: MutableState<String>,
-                       message: MutableState<String>,
-                       link: MutableState<String>,
-                       context: Context) {
+fun redirectWithoutMsg(
+    phoneNumber: MutableState<String>,
+    message: MutableState<String>,
+    link: MutableState<String>,
+    context: Context
+) {
     link.value = link.value + phoneNumber.value
     context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(link.value)))
     link.value = "https://wa.me/"
@@ -16,11 +18,13 @@ fun redirectWithoutMsg(phoneNumber: MutableState<String>,
     message.value = ""
 }
 
-fun redirectWithMsg(phoneNumber: MutableState<String>,
-                    message: MutableState<String>,
-                    link: MutableState<String>,
-                    linkWithMsg: MutableState<String>,
-                    context: Context) {
+fun redirectWithMsg(
+    phoneNumber: MutableState<String>,
+    message: MutableState<String>,
+    link: MutableState<String>,
+    linkWithMsg: MutableState<String>,
+    context: Context
+) {
     linkWithMsg.value = link.value + phoneNumber.value + "?text=" + createLinkWithMsg(message.value)
     context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(linkWithMsg.value)))
     link.value = "https://wa.me/"
